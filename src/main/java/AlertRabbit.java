@@ -6,6 +6,7 @@ import org.quartz.JobBuilder;
 
 import java.io.*;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -15,8 +16,6 @@ import static org.quartz.TriggerBuilder.newTrigger;
 
 public class AlertRabbit {
     public static void main(String[] args) throws ClassNotFoundException, SQLException, IOException {
-        String driver = read().getProperty("driver");
-        Class.forName(driver);
         Connection connection = connect();
         try {
             Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
@@ -49,13 +48,13 @@ public class AlertRabbit {
     }
 
     private static Connection connect() throws ClassNotFoundException, SQLException, IOException {
-        String driver = read().getProperty("driver");
+        Properties pr = read();
+        String driver = pr.getProperty("driver");
         Class.forName(driver);
-        String url = read().getProperty("url");
-        String login = read().getProperty("login");
-        String password = read().getProperty("password");
-        Connection cn = DriverManager.getConnection(url, login, password);
-        return cn;
+        String url = pr.getProperty("url");
+        String login = pr.getProperty("login");
+        String password = pr.getProperty("password");
+        return DriverManager.getConnection(url, login, password);
     }
 
     public static class Rabbit implements Job {
@@ -64,7 +63,7 @@ public class AlertRabbit {
             System.out.println("Rabbit execute");
             Connection connection = (Connection) context.getJobDetail().getJobDataMap().get("connection");
             try (PreparedStatement ps = connection.prepareStatement("insert into rabbit (create_data) values ( ? )")) {
-                    ps.setDate(1, new Date(20210504));
+                    ps.setDate(1, Date.valueOf(LocalDate.now()));
                     ps.execute();
 
             } catch (SQLException throwables) {
