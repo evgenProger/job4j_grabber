@@ -16,15 +16,14 @@ import java.util.Map;
 import static java.util.HashMap.*;
 
 public class SqlRuDateTimeParser implements DateTimeParser {
-    @Override
-    public LocalDateTime parse(String parse) {
-        LocalDate localDate;
-        LocalTime time;
-        String[] arrDate = parse.split(" ");
-        LocalDateTime date;
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("d MM yy");
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-        Map<String, String> months = new HashMap<>(Map.of(
+    private  final DateTimeFormatter dateTimeFormatter;
+    private final DateTimeFormatter timeFormatter;
+    private  final Map<String, String> months;
+
+    public SqlRuDateTimeParser() {
+        dateTimeFormatter = DateTimeFormatter.ofPattern("d MM yy");
+        timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+        months  = new HashMap<>(Map.of(
                 "янв", "01",
                 "фев", "02",
                 "мар", "03",
@@ -38,18 +37,20 @@ public class SqlRuDateTimeParser implements DateTimeParser {
         ));
         months.put("ноя", "11");
         months.put("дек", "12");
+    }
+
+    @Override
+    public LocalDateTime parse(String parse) {
+        LocalDate localDate;
+        LocalTime time;
+        String[] arrDate = parse.split(" ");
+        LocalDateTime date;
         if (parse.contains("сегодня")) {
-            localDate = LocalDate.of(
-                    LocalDate.now().getYear(),
-                    LocalDate.now().getMonth(),
-                    LocalDate.now().getDayOfMonth());
+            localDate = LocalDate.now();
             time = LocalTime.parse(arrDate[1], timeFormatter);
 
         } else if (parse.contains("вчера")) {
-            localDate = LocalDate.of(
-                    LocalDate.now().getYear(),
-                    LocalDate.now().getMonth(),
-                    LocalDate.now().getDayOfMonth()).minusDays(1);
+            localDate = LocalDate.now().minusDays(1);
             time = LocalTime.parse(arrDate[1], timeFormatter);
         }
         else {
