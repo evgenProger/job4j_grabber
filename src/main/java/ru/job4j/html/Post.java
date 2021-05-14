@@ -1,37 +1,21 @@
 package ru.job4j.html;
 
-import java.util.Objects;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+
+import java.io.IOException;
 
 public class Post {
-    String head;
-    String text;
-    String author;
-    String date;
-    String url;
+    private String content;
+    private String date;
 
-
-    public String getHead() {
-        return head;
+    public String getContent() {
+        return content;
     }
 
-    public void setHead(String head) {
-        this.head = head;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getDate() {
@@ -42,34 +26,21 @@ public class Post {
         this.date = date;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Post post = (Post) o;
-        return head.equals(post.head) && text.equals(post.text) && author.equals(post.author) && date.equals(post.date);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(head, text, author, date);
-    }
-
-    @Override
-    public String toString() {
-        return "Post{" +
-                "head='" + head + '\'' +
-                ", text='" + text + '\'' +
-                ", author='" + author + '\'' +
-                ", date='" + date + '\'' +
-                '}';
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
+    public static void main(String[] args) throws IOException {
+        Post post = new Post();
+        Document doc = Jsoup.connect("https://www.sql.ru/forum/job-offers").get();
+        Elements row = doc.select(".postslisttopic");
+        Elements links = row.select("a[href]");
+        String link = links.get(11).attr("href");
+        Document forum = Jsoup.connect(link).get();
+        Elements text = forum.select(".msgBody");
+        post.setContent(text.get(1).text());
+        Elements date = forum.select(".msgFooter");
+        post.setDate(date.get(0).text().substring(0, 16));
+        String[] txt = post.getContent().split("\\.");
+        for (String s: txt) {
+            System.out.println(s);
+        }
+        System.out.println(post.getDate());
     }
 }
