@@ -1,19 +1,11 @@
-package ru.job4j.grabber.utils;
+package ru.job4j.utils;
 
-import java.io.StringReader;
-import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
-
-import static java.util.HashMap.*;
 
 public class SqlRuDateTimeParser implements DateTimeParser {
     private  final DateTimeFormatter dateTimeFormatter;
