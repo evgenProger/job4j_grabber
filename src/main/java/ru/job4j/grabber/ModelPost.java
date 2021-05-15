@@ -4,11 +4,11 @@ import java.sql.Date;
 import java.util.Objects;
 
 public class ModelPost {
-    int id;
-    String name;
-    String text;
-    String link;
-    String date;
+    private int id;
+    private String name;
+    private String text;
+    private String link;
+    private String date;
 
     public int getId() {
         return id;
