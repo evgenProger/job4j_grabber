@@ -1,11 +1,8 @@
 create table post
 (
-    id serial,
-    name varchar(50),
+    id serial primary key ,
+    name varchar(100),
     text text,
-    link varchar(75),
-    created date,
-    PRIMARY KEY (id, link)
-
-
+    link varchar(200) unique,
+    created timestamp
 )

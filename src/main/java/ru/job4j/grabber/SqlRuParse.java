@@ -4,6 +4,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import ru.job4j.utils.SqlRuDateTimeParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,38 +16,41 @@ public class SqlRuParse implements Parse {
 
     @Override
     public List<Post> list(String link) {
-        Post post = new Post();
-        try {
-            Document doc = Jsoup.connect(link).get();
-            Elements row = doc.select(".postslisttopic");
-            Elements links = row.select("a[href]");
-            String url = links.get(21).attr("href");
-            post.setLink(url);
-            posts.add(post);
+        for (int i = 21; i < 24; i++) {
+            Post post = new Post();
+            try {
+                Document doc = Jsoup.connect(link).get();
+                Elements row = doc.select(".postslisttopic");
+                Elements links = row.select("a[href]");
+                String url = links.get(i).attr("href");
+                post.setLink(url);
+                posts.add(post);
 
-        } catch (IOException e) {
-            e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+
         return posts;
     }
 
     @Override
     public Post detail(String link) {
-        Post post = posts.get(0);
+        SqlRuDateTimeParser parser = new SqlRuDateTimeParser();
+        Post post = new Post();
         try {
             Document doc = Jsoup.connect(link).get();
             Elements text = doc.select(".msgBody");
             post.setText(text.get(1).text());
             Elements date = doc.select(".msgFooter");
-            post.setCreated(date.get(0).text().substring(0, 16));
+            int index  = date.get(0).text().indexOf("[");
+            String str = date.get(0).text().substring(0, index).trim();
+            post.setCreated(parser.parse(str));
             Elements name = doc.select(".messageHeader");
-            post.setName(name.get(1).text());
-
-
+            post.setName(name.get(0).text());
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return post;
     }
 }

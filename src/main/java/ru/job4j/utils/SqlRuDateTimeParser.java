@@ -33,6 +33,7 @@ public class SqlRuDateTimeParser implements DateTimeParser {
 
     @Override
     public LocalDateTime parse(String parse) {
+        parse = parse.replaceAll(",", "");
         LocalDate localDate;
         LocalTime time;
         String[] arrDate = parse.split(" ");
@@ -46,8 +47,8 @@ public class SqlRuDateTimeParser implements DateTimeParser {
             time = LocalTime.parse(arrDate[1], timeFormatter);
         }
         else {
-            String timePeriod = parse.substring(9);
-            String datePeriod = parse.substring(0, 8);
+            String timePeriod = arrDate[3];
+            String datePeriod = arrDate[0] + " " +  arrDate[1] + " " + arrDate[2];
             datePeriod = datePeriod.replaceAll(arrDate[1], months.get(arrDate[1]));
             localDate = LocalDate.parse(datePeriod, dateTimeFormatter);
             time = LocalTime.parse(timePeriod, timeFormatter);

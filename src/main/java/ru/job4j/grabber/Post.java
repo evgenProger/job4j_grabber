@@ -5,13 +5,16 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 public class Post {
-    private int id;
+
+    private String id;
     private String name;
     private String link;
     private String text;
-    private String created;
+    private LocalDateTime created;
+
 
     public String getText() {
         return text;
@@ -19,25 +22,6 @@ public class Post {
 
     public void setText(String text) {
         this.text = text;
-    }
-
-
-    public static void main(String[] args) throws IOException {
-        Post post = new Post();
-        Document doc = Jsoup.connect("https://www.sql.ru/forum/job-offers").get();
-        Elements row = doc.select(".postslisttopic");
-        Elements links = row.select("a[href]");
-        String link = links.get(11).attr("href");
-        Document forum = Jsoup.connect(link).get();
-        Elements text = forum.select(".msgBody");
-        post.setText(text.get(1).text());
-        Elements date = forum.select(".msgFooter");
-        post.setCreated(date.get(0).text().substring(0, 16));
-        String[] txt = post.getText().split("\\.");
-        for (String s: txt) {
-            System.out.println(s);
-        }
-        System.out.println(post.getCreated());
     }
 
     public String getName() {
@@ -56,11 +40,33 @@ public class Post {
         this.link = link;
     }
 
-    public String getCreated() {
+
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public LocalDateTime getCreated() {
         return created;
     }
 
-    public void setCreated(String created) {
+    public void setCreated(LocalDateTime created) {
         this.created = created;
     }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", link='" + link + '\'' +
+                ", text='" + text + '\'' +
+                ", created=" + created +
+                '}';
+    }
 }
+
