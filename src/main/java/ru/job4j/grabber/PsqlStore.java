@@ -15,25 +15,32 @@ import java.util.Properties;
 public class PsqlStore implements Store, AutoCloseable {
     private Connection cnn;
 
-    public PsqlStore(Properties cfg) {
-        try {
-            Class.forName(cfg.getProperty("driver"));
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        }
-        String url = cfg.getProperty("url");
-        String login = cfg.getProperty("login");
-        String password = cfg.getProperty("password");
-        try {
-            cnn = DriverManager.getConnection(url, login, password);
-        } catch (SQLException throwable) {
-            throwable.printStackTrace();
-        }
+    public PsqlStore(Connection cn) {
+        this.init();
+        this.cnn = cn;
     }
+
+
+        public void init() {
+            Properties cfg = new Properties();
+            try {
+                Class.forName(cfg.getProperty("driver"));
+            } catch (Exception e) {
+                throw new IllegalStateException(e);
+            }
+            String url = cfg.getProperty("url");
+            String login = cfg.getProperty("login");
+            String password = cfg.getProperty("password");
+            try {
+                cnn = DriverManager.getConnection(url, login, password);
+            } catch (SQLException throwable) {
+                throwable.printStackTrace();
+            }
+        }
+
 
     @Override
     public void save(Post post) {
-        SqlRuDateTimeParser parser = new SqlRuDateTimeParser();
         try (PreparedStatement ps = cnn.prepareStatement(
                 "insert into post (name, link, text, created) values (?, ?, ?, ?)")) {
             ps.setString(1, post.getName());
@@ -97,7 +104,7 @@ public class PsqlStore implements Store, AutoCloseable {
         }
     }
 
-    public static void main(String[] args) {
+  /*  public static void main(String[] args) {
         Properties cfg = new Properties();
         try (FileInputStream in = new FileInputStream("src/main/resources/post.properties")) {
             cfg.load(in);
@@ -128,4 +135,5 @@ public class PsqlStore implements Store, AutoCloseable {
             throwables.printStackTrace();
         }
     }
+   */
 }

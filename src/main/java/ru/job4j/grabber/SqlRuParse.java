@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SqlRuParse implements Parse {
-    private final List<Post> posts= new ArrayList<>();
+    private final List<Post> posts = new ArrayList<>();
 
 
     @Override
@@ -30,7 +30,6 @@ public class SqlRuParse implements Parse {
                 e.printStackTrace();
             }
         }
-
         return posts;
     }
 

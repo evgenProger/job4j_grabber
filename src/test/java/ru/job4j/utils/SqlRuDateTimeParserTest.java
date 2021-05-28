@@ -28,7 +28,7 @@ public class SqlRuDateTimeParserTest {
         SqlRuDateTimeParser parser = new SqlRuDateTimeParser();
         String date = "2 ноя 19 22:29";
         LocalTime time = LocalTime.of(22, 29);
-        LocalDate localDate = LocalDate.of(2019,11, 2);
+        LocalDate localDate = LocalDate.of(2019, 11, 2);
         LocalDateTime expected = LocalDateTime.of(localDate, time);
         assertThat(parser.parse(date), is(expected));
     }

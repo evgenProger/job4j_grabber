@@ -45,8 +45,7 @@ public class SqlRuDateTimeParser implements DateTimeParser {
         } else if (parse.contains("вчера")) {
             localDate = LocalDate.now().minusDays(1);
             time = LocalTime.parse(arrDate[1], timeFormatter);
-        }
-        else {
+        } else {
             String timePeriod = arrDate[3];
             String datePeriod = arrDate[0] + " " +  arrDate[1] + " " + arrDate[2];
             datePeriod = datePeriod.replaceAll(arrDate[1], months.get(arrDate[1]));
