@@ -5,6 +5,7 @@ import ru.job4j.utils.SqlRuDateTimeParser;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,8 +22,13 @@ public class PsqlStore implements Store, AutoCloseable {
     }
 
 
-        public void init() {
+        public void init()  {
             Properties cfg = new Properties();
+            try (InputStream in = PsqlStore.class.getClassLoader().getResourceAsStream("post.properties")) {
+                cfg.load(in);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             try {
                 Class.forName(cfg.getProperty("driver"));
             } catch (Exception e) {
@@ -42,12 +48,20 @@ public class PsqlStore implements Store, AutoCloseable {
     @Override
     public void save(Post post) {
         try (PreparedStatement ps = cnn.prepareStatement(
-                "insert into post (name, link, text, created) values (?, ?, ?, ?)")) {
+                "insert into post (name, link, text, created) values (?, ?, ?, ?)",
+                Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, post.getName());
             ps.setString(2, post.getLink());
             ps.setString(3, post.getText());
             ps.setObject(4, post.getCreated());
             ps.execute();
+            try (ResultSet keys = ps.getGeneratedKeys()) {
+                if (keys.next()) {
+                    int value = keys.getInt(1);
+                    String id = Integer.toString(value);
+                    post.setId(id);
+                }
+            }
 
         } catch (SQLException throwable) {
             throwable.printStackTrace();
