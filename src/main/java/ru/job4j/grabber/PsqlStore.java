@@ -117,37 +117,4 @@ public class PsqlStore implements Store, AutoCloseable {
             cnn.close();
         }
     }
-
-  /*  public static void main(String[] args) {
-        Properties cfg = new Properties();
-        try (FileInputStream in = new FileInputStream("src/main/resources/post.properties")) {
-            cfg.load(in);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        PsqlStore psqlStore = new PsqlStore(cfg);
-        SqlRuParse sqlRuParse = new SqlRuParse();
-        List<Post> posts = new ArrayList<>();
-        posts.addAll(sqlRuParse.list("https://www.sql.ru/forum/job-offers"));
-        for (Post p : posts) {
-            Post post = sqlRuParse.detail(p.getLink());
-            post.setLink(p.getLink());
-            psqlStore.save(post);
-        }
-        List<Post> posties = new ArrayList<>();
-        try {
-            posties.addAll(psqlStore.getAll());
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-        try {
-            System.out.println(psqlStore.findById("4"));
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-    }
-   */
 }
