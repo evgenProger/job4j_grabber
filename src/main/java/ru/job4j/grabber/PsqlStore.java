@@ -18,7 +18,8 @@ public class PsqlStore implements Store, AutoCloseable {
     private Connection cnn;
 
     public PsqlStore(Connection cn) {
-        this.init();
+       Properties cfg = new Properties();
+        this.init(cfg);
         this.cnn = cn;
     }
 
@@ -28,12 +29,10 @@ public class PsqlStore implements Store, AutoCloseable {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        this.init();
+        this.init(cfg);
     }
 
-
-        public void init()  {
-            Properties cfg = new Properties();
+        public void init(Properties cfg)  {
             try (InputStream in = PsqlStore.class.getClassLoader().getResourceAsStream("post.properties")) {
                 cfg.load(in);
             } catch (IOException e) {
