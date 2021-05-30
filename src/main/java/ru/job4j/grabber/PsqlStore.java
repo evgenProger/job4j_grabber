@@ -14,30 +14,16 @@ import java.util.List;
 import java.util.Properties;
 
 public class PsqlStore implements Store, AutoCloseable {
-
     private Connection cnn;
-
     public PsqlStore(Connection cn) {
-       Properties cfg = new Properties();
-        this.init(cfg);
         this.cnn = cn;
     }
 
     public PsqlStore(Properties cfg) {
-        try {
-            Class.forName(cfg.getProperty("driver"));
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
         this.init(cfg);
     }
 
         public void init(Properties cfg)  {
-            try (InputStream in = PsqlStore.class.getClassLoader().getResourceAsStream("post.properties")) {
-                cfg.load(in);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
             try {
                 Class.forName(cfg.getProperty("driver"));
             } catch (Exception e) {
