@@ -35,17 +35,19 @@ public class Grabber implements Grab {
 
     @Override
     public void init(Parse parse, Store store, Scheduler scheduler) throws SchedulerException {
-     /*   JobDataMap data = new JobDataMap();
+       /* JobDataMap data = new JobDataMap();
         data.put("store", store);
         data.put("parse", parse);
-        JobDetail job = newJob((Class<? extends Job>) GrabJob.class)
+        JobDetail job = newJob(GrabJob.class)
                 .usingJobData(data)
                 .build();
 
 
     }
 
-      */
+        */
+
+
     }
 
 
