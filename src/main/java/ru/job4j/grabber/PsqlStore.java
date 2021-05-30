@@ -14,11 +14,21 @@ import java.util.List;
 import java.util.Properties;
 
 public class PsqlStore implements Store, AutoCloseable {
+
     private Connection cnn;
 
     public PsqlStore(Connection cn) {
         this.init();
         this.cnn = cn;
+    }
+
+    public PsqlStore(Properties cfg) {
+        try {
+            Class.forName(cfg.getProperty("driver"));
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        this.init();
     }
 
 
@@ -53,7 +63,7 @@ public class PsqlStore implements Store, AutoCloseable {
             ps.setString(1, post.getName());
             ps.setString(2, post.getLink());
             ps.setString(3, post.getText());
-            ps.setObject(4, post.getCreated());
+            ps.setTimestamp(4, Timestamp.valueOf(post.getCreated()));
             ps.execute();
             try (ResultSet keys = ps.getGeneratedKeys()) {
                 if (keys.next()) {
